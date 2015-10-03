@@ -1,1 +1,1 @@
-# curreny-rate
+# FX Dealer
