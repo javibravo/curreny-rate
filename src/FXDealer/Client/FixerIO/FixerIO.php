@@ -6,7 +6,7 @@
  * Time: 16:11
  */
 
-namespace FXDealer\Client;
+namespace FXDealer\Client\FixerIO;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -16,17 +16,24 @@ class FixerIO {
 
         const DAY_FORMAT = 'Y-m-d';
 
-        private $baseUrl;
+        private $endpointUrl = 'api.fixer.io';
+        private $protocol;
         private $client;
 
         public function __construct(array $options = array()) {
-            $this->baseUrl = 'http://api.fixer.io';
+            $this->protocol = 'http';
+            if (array_key_exists('protocol', $options))
+                $this->protocol = $options['protocol'];
             $this->client = new Client();
+        }
+
+        protected function getUrl($endpointPath, array $parameters = array()) {
+            return $this->protocol.'://'.$this->endpointUrl.'/'.$endpointPath.'?'.http_build_query($parameters);
         }
 
         public function getLatest($base = 'EUR') {
             try {
-                $response = $this->client->request('GET', $this->baseUrl.'/latest?base='.$base);
+                $response = $this->client->request('GET', $this->getUrl('latest', ['base' => $base]));
                 return json_decode($response->getBody(), true);
             } catch (ClientException $ex) {
                 throw $ex;
@@ -35,7 +42,7 @@ class FixerIO {
 
         public function getHistorical(DateTime $day, $base = 'EUR') {
             try {
-                $response = $this->client->request('GET', $this->baseUrl.'/'.$day->format(self::DAY_FORMAT).'?base='.$base);
+                $response = $this->client->request('GET', $this->getUrl($day->format(self::DAY_FORMAT), ['base' => $base]));
                 return json_decode($response->getBody(), true);
             } catch (ClientException $ex) {
                 throw $ex;
