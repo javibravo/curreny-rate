@@ -9,9 +9,12 @@
 namespace FXDealer\Client;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use DateTime;
 
 class FixerIO {
 
+        const DAY_FORMAT = 'Y-m-d';
 
         private $baseUrl;
         private $client;
@@ -22,7 +25,23 @@ class FixerIO {
         }
 
         public function getLatest($base = 'EUR') {
-            $response = $this->client->request('GET', $this->baseUrl.'/latest?base='.$base);
-            return json_decode($response->getBody(), true);
+            try {
+                $response = $this->client->request('GET', $this->baseUrl.'/latest?base='.$base);
+                return json_decode($response->getBody(), true);
+            } catch (ClientException $ex) {
+                throw $ex;
+            }
         }
+
+        public function getHistorical(DateTime $day, $base = 'EUR') {
+            try {
+                $response = $this->client->request('GET', $this->baseUrl.'/'.$day->format(self::DAY_FORMAT).'?base='.$base);
+                return json_decode($response->getBody(), true);
+            } catch (ClientException $ex) {
+                throw $ex;
+            }
+        }
+
+
+
 }
