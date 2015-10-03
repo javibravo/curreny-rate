@@ -1,0 +1,26 @@
+{
+  "name": "jbravo/fx-dealer",
+  "description": "PHP lib to manage currency exchange rates",
+  "keywords": ["currency", "rate", "money", "exchange", "foreign", "dealer"],
+  "homepage": "http://github.com/javibravo/curreny-rate",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Javier Bravo",
+      "email": "javibravo85@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "autoload": {
+    "psr-4": {"Currency\\": "src/FXDealer"}
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.0.*"
+  },
+  "autoload-dev": {
+    "psr-4": {"Currency\\": "tests/FXDealer"}
+  }
+}
